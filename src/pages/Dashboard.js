@@ -11,23 +11,29 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // Get token from URL if coming from Google OAuth
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
 
         if (token) {
             localStorage.setItem('token', token);
-            window.history.replaceState({}, document.title, '/dashboard');
+            // Remove token from URL without reloading
+            window.history.replaceState({}, document.title, window.location.pathname);
+            // Reload to fetch user with new token
             window.location.reload();
+            return;
         }
-    }, []);
 
-    useEffect(() => {
         fetchSummary();
     }, []);
 
     const fetchSummary = async () => {
         try {
             const token = localStorage.getItem('token');
+            if (!token) {
+                setLoading(false);
+                return;
+            }
             const response = await axios.get(`${API_URL}/dashboard/summary`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -48,6 +54,9 @@ const Dashboard = () => {
             <div style={styles.header}>
                 <h1>Dashboard</h1>
                 <div style={styles.userInfo}>
+                    <button onClick={() => navigate('/transactions')} style={styles.viewBtn}>
+                        📋 View All
+                    </button>
                     <button onClick={() => navigate('/add-transaction')} style={styles.addBtn}>
                         + Add Transaction
                     </button>
@@ -115,6 +124,15 @@ const styles = {
         width: '40px', 
         height: '40px', 
         borderRadius: '50%' 
+    },
+    viewBtn: {
+        backgroundColor: '#1a73e8',
+        color: 'white',
+        border: 'none',
+        padding: '10px 20px',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        marginRight: '10px'
     },
     addBtn: {
         backgroundColor: '#28a745',
