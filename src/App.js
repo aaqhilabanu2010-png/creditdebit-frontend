@@ -4,15 +4,15 @@ import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import AddTransaction from './pages/AddTransaction';
 import Transactions from './pages/Transactions';
-import TransactionDetail from './pages/TransactionDetail';
+import AddTransaction from './pages/AddTransaction';
 import EditTransaction from './pages/EditTransaction';
+import TransactionDetail from './pages/TransactionDetail';
 
 function App() {
     return (
         <AuthProvider>
-            <Router>
+            <Router basename="/creditdebit-frontend">
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route 
@@ -20,6 +20,14 @@ function App() {
                         element={
                             <PrivateRoute>
                                 <Dashboard />
+                            </PrivateRoute>
+                        } 
+                    />
+                    <Route 
+                        path="/transactions" 
+                        element={
+                            <PrivateRoute>
+                                <Transactions />
                             </PrivateRoute>
                         } 
                     />
@@ -32,30 +40,21 @@ function App() {
                         } 
                     />
                     <Route 
-                         path="/edit-transaction/:id" 
-                         element={
+                        path="/edit-transaction/:id" 
+                        element={
                             <PrivateRoute>
                                 <EditTransaction />
                             </PrivateRoute>
                         } 
                     />
                     <Route 
-    path="/transaction/:id" 
-    element={
-        <PrivateRoute>
-            <TransactionDetail />
-        </PrivateRoute>
-    } 
-/>
-
-                    <Route 
-                         path="/transactions" 
+                        path="/transaction/:id" 
                         element={
-                         <PrivateRoute>
-                             <Transactions />
-                        </PrivateRoute>
-                    } 
-                />
+                            <PrivateRoute>
+                                <TransactionDetail />
+                            </PrivateRoute>
+                        } 
+                    />
                 </Routes>
             </Router>
         </AuthProvider>
