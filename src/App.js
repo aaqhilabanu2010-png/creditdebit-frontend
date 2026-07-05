@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CustomerProvider } from './context/CustomerContext';
 import PrivateRoute from './components/PrivateRoute';
@@ -16,7 +16,7 @@ function App() {
   return (
     <AuthProvider>
       <CustomerProvider>
-        <Router basename="/creditdebit-frontend">
+        <Router>
           <Routes>
             <Route path="/" element={<Login />} />
             <Route 
