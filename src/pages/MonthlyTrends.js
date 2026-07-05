@@ -50,7 +50,7 @@ const MonthlyTrends = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         style={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)',
           padding: '20px',
           color: 'white'
         }}

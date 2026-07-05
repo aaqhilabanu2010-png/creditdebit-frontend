@@ -89,7 +89,7 @@ const Dashboard = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         style={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)',
           padding: '20px',
           color: 'white'
         }}
@@ -317,12 +317,12 @@ const Dashboard = () => {
           width: '60px',
           height: '60px',
           borderRadius: '50%',
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)',
           border: 'none',
           color: 'white',
           fontSize: '28px',
           cursor: 'pointer',
-          boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+          boxShadow: '0 4px 15px rgba(30, 64, 175, 0.4)',
           zIndex: 100
         }}
       >
@@ -392,7 +392,7 @@ const Dashboard = () => {
                 <button
                   onClick={handleCreateCustomer}
                   disabled={submitting}
-                  style={{...buttonStyle, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', opacity: submitting ? 0.7 : 1, cursor: submitting ? 'not-allowed' : 'pointer'}}
+                  style={{...buttonStyle, background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)', color: 'white', opacity: submitting ? 0.7 : 1, cursor: submitting ? 'not-allowed' : 'pointer'}}
                 >
                   {submitting ? 'Creating...' : 'Create'}
                 </button>

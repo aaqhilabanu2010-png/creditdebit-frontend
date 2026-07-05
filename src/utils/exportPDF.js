@@ -7,8 +7,8 @@ export const exportCustomerToPDF = (customer, filename) => {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   
-  // Header Background
-  doc.setFillColor(102, 126, 234);
+  // Header Background - Blue
+  doc.setFillColor(30, 64, 175);
   doc.rect(0, 0, pageWidth, 45, 'F');
   
   // Title
@@ -20,7 +20,7 @@ export const exportCustomerToPDF = (customer, filename) => {
   // Subtitle
   doc.setFontSize(11);
   doc.setFont('helvetica', 'normal');
-  doc.text('Credit/Debit Tracker', 14, 30);
+  doc.text('Income Tracker', 14, 30);
   
   // Date
   doc.setFontSize(9);
@@ -44,7 +44,7 @@ export const exportCustomerToPDF = (customer, filename) => {
     doc.text(`Details: ${customer.details.substring(0, 50)}`, 80, 75);
   }
   
-  // Stats Cards - Full width with proper spacing
+  // Stats Cards
   const cardY = 88;
   const cardWidth = (pageWidth - 35) / 3;
   
@@ -95,7 +95,7 @@ export const exportCustomerToPDF = (customer, filename) => {
   doc.setLineWidth(0.5);
   doc.line(14, 131, pageWidth - 14, 131);
   
-  // Transactions Table - Wider columns, no wrapping
+  // Transactions Table
   const tableData = customer.transactions?.map(t => [
     new Date(t.date).toLocaleDateString(),
     new Date(t.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -144,7 +144,7 @@ export const exportCustomerToPDF = (customer, filename) => {
     doc.setTextColor(156, 163, 175);
     doc.setFont('helvetica', 'normal');
     doc.text(`Page ${i} of ${pageCount}`, pageWidth - 35, doc.internal.pageSize.getHeight() - 10);
-    doc.text('Credit/Debit Tracker', 14, doc.internal.pageSize.getHeight() - 10);
+    doc.text('Income Tracker', 14, doc.internal.pageSize.getHeight() - 10);
   }
   
   doc.save(filename);
@@ -154,8 +154,8 @@ export const exportAllCustomersToPDF = (customers, summary, filename) => {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   
-  // Header Background
-  doc.setFillColor(102, 126, 234);
+  // Header Background - Blue
+  doc.setFillColor(30, 64, 175);
   doc.rect(0, 0, pageWidth, 45, 'F');
   
   // Title
@@ -167,7 +167,7 @@ export const exportAllCustomersToPDF = (customers, summary, filename) => {
   // Subtitle
   doc.setFontSize(11);
   doc.setFont('helvetica', 'normal');
-  doc.text('Credit/Debit Tracker', 14, 30);
+  doc.text('Income Tracker', 14, 30);
   
   // Date
   doc.setFontSize(9);
@@ -224,7 +224,7 @@ export const exportAllCustomersToPDF = (customers, summary, filename) => {
   doc.setLineWidth(0.5);
   doc.line(14, 95, pageWidth - 14, 95);
   
-  // Customers Table - Wider columns, no wrapping
+  // Customers Table
   const tableData = customers.map(c => [
     c.name,
     c.phone || '-',
@@ -275,7 +275,7 @@ export const exportAllCustomersToPDF = (customers, summary, filename) => {
     doc.setTextColor(156, 163, 175);
     doc.setFont('helvetica', 'normal');
     doc.text(`Page ${i} of ${pageCount}`, pageWidth - 35, doc.internal.pageSize.getHeight() - 10);
-    doc.text('Credit/Debit Tracker', 14, doc.internal.pageSize.getHeight() - 10);
+    doc.text('Income Tracker', 14, doc.internal.pageSize.getHeight() - 10);
   }
   
   doc.save(filename);
