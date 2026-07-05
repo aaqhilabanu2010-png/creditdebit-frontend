@@ -2,7 +2,7 @@
   "name": "creditdebit-web",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://aaqhilabanu2010-png.github.io/creditdebit-frontend",
+  "homepage": "https://incometracker.github.io/income-tracker",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
