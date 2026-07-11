@@ -14,13 +14,53 @@ const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [summary, setSummary] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', details: '' });
+  const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', details: '', photo: '' });
   const [submitting, setSubmitting] = useState(false);
+  const fileInputRef = React.useRef(null);
 
   useEffect(() => {
     fetchCustomers();
     fetchSummary();
   }, [fetchCustomers]);
+
+  const handlePickContact = async () => {
+    try {
+      // Check if Contact Picker API is supported
+      if ('contacts' in navigator && 'select' in navigator.contacts) {
+        const props = ['name', 'tel'];
+        const opts = { multiple: false };
+        const contacts = await navigator.contacts.select(props, opts);
+
+        if (contacts && contacts.length > 0) {
+          const contact = contacts[0];
+          setNewCustomer({
+            ...newCustomer,
+            name: contact.name ? contact.name[0] : '',
+            phone: contact.tel ? contact.tel[0].replace(/\s/g, '') : ''
+          });
+        }
+      } else {
+        alert('Contact picker is not supported on this device/browser.');
+      }
+    } catch (err) {
+      console.error('Contact picker error:', err);
+    }
+  };
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 1024 * 1024) { // 1MB limit for Base64
+        alert('Photo is too large. Please select an image under 1MB.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewCustomer({ ...newCustomer, photo: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const fetchSummary = async () => {
     try {
@@ -51,7 +91,7 @@ const Dashboard = () => {
     
     if (result) {
       setShowAddModal(false);
-      setNewCustomer({ name: '', phone: '', details: '' });
+      setNewCustomer({ name: '', phone: '', details: '', photo: '' });
       fetchCustomers();
       fetchSummary();
     }
@@ -263,9 +303,30 @@ const Dashboard = () => {
                 boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'center'
+                alignItems: 'center',
+                gap: '12px'
               }}
             >
+              {/* Profile Photo */}
+              <div style={{
+                width: '50px',
+                height: '50px',
+                borderRadius: '50%',
+                background: '#e5e7eb',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '20px',
+                overflow: 'hidden',
+                flexShrink: 0
+              }}>
+                {customer.photo ? (
+                  <img src={customer.photo} alt={customer.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <span>👤</span>
+                )}
+              </div>
+
               <div style={{ flex: 1, pointerEvents: 'none' }}>
                 <h3 style={{ margin: '0 0 4px 0', fontSize: '18px', color: '#1f2937' }}>
                   {customer.name}
@@ -356,18 +417,77 @@ const Dashboard = () => {
                 borderRadius: '20px',
                 padding: '24px',
                 width: '90%',
-                maxWidth: '400px'
+                maxWidth: '400px',
+                maxHeight: '90vh',
+                overflowY: 'auto'
               }}
               onClick={e => e.stopPropagation()}
             >
               <h2 style={{ margin: '0 0 20px 0', color: '#1f2937' }}>Add Customer</h2>
-              <input
-                type="text"
-                placeholder="Customer Name *"
-                value={newCustomer.name}
-                onChange={e => setNewCustomer({...newCustomer, name: e.target.value})}
-                style={inputStyle}
-              />
+
+              {/* Photo Upload Area */}
+              <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                <div
+                  onClick={() => fileInputRef.current.click()}
+                  style={{
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '50%',
+                    background: '#f3f4f6',
+                    margin: '0 auto',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    border: '2px dashed #d1d5db',
+                    overflow: 'hidden',
+                    position: 'relative'
+                  }}
+                >
+                  {newCustomer.photo ? (
+                    <img src={newCustomer.photo} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <div style={{ textAlign: 'center' }}>
+                      <span style={{ fontSize: '24px' }}>📸</span>
+                      <p style={{ margin: 0, fontSize: '10px', color: '#6b7280' }}>Add Photo</p>
+                    </div>
+                  )}
+                </div>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handlePhotoChange}
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                />
+              </div>
+
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="text"
+                  placeholder="Customer Name *"
+                  value={newCustomer.name}
+                  onChange={e => setNewCustomer({...newCustomer, name: e.target.value})}
+                  style={{...inputStyle, paddingRight: '45px'}}
+                />
+                <button
+                  onClick={handlePickContact}
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '10px',
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '20px',
+                    cursor: 'pointer',
+                    padding: '5px'
+                  }}
+                  title="Pick from contacts"
+                >
+                  📇
+                </button>
+              </div>
+
               <input
                 type="text"
                 placeholder="Phone Number"

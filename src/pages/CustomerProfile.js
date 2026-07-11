@@ -77,31 +77,55 @@ const CustomerProfile = () => {
       >
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <div>
-              <button 
-                onClick={() => navigate('/dashboard')}
-                style={{
-                  background: 'rgba(255,255,255,0.2)',
-                  border: '1px solid rgba(255,255,255,0.3)',
-                  color: 'white',
-                  padding: '8px 16px',
-                  borderRadius: '20px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  marginBottom: '12px'
-                }}
-              >
-                ← Back
-              </button>
-              <h1 style={{ margin: 0, fontSize: '24px' }}>{selectedCustomer.name}</h1>
-              <p style={{ margin: '4px 0 0 0', opacity: 0.9 }}>
-                {selectedCustomer.phone || 'No phone'}
-              </p>
-              {selectedCustomer.details && (
-                <p style={{ margin: '4px 0 0 0', opacity: 0.7, fontSize: '14px' }}>
-                  {selectedCustomer.details}
+            <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+              {/* Profile Photo */}
+              <div style={{
+                width: '70px',
+                height: '70px',
+                borderRadius: '50%',
+                background: 'rgba(255,255,255,0.2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '32px',
+                overflow: 'hidden',
+                flexShrink: 0,
+                border: '2px solid rgba(255,255,255,0.3)',
+                marginTop: '35px'
+              }}>
+                {selectedCustomer.photo ? (
+                  <img src={selectedCustomer.photo} alt={selectedCustomer.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <span>👤</span>
+                )}
+              </div>
+
+              <div>
+                <button
+                  onClick={() => navigate('/dashboard')}
+                  style={{
+                    background: 'rgba(255,255,255,0.2)',
+                    border: '1px solid rgba(255,255,255,0.3)',
+                    color: 'white',
+                    padding: '8px 16px',
+                    borderRadius: '20px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    marginBottom: '12px'
+                  }}
+                >
+                  ← Back
+                </button>
+                <h1 style={{ margin: 0, fontSize: '24px' }}>{selectedCustomer.name}</h1>
+                <p style={{ margin: '4px 0 0 0', opacity: 0.9 }}>
+                  {selectedCustomer.phone || 'No phone'}
                 </p>
-              )}
+                {selectedCustomer.details && (
+                  <p style={{ margin: '4px 0 0 0', opacity: 0.7, fontSize: '14px' }}>
+                    {selectedCustomer.details}
+                  </p>
+                )}
+              </div>
             </div>
             <button 
               onClick={() => exportCustomerToPDF(selectedCustomer, `${selectedCustomer.name}_Statement_${new Date().toISOString().split('T')[0]}.pdf`)}
