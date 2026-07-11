@@ -28,38 +28,53 @@ const Dashboard = () => {
 
   const handlePickContact = async () => {
     try {
+      console.log('Attempting to open contact picker...');
       // Check if Contact Picker API is supported
       if ('contacts' in navigator && 'select' in navigator.contacts) {
         const props = ['name', 'tel'];
         const opts = { multiple: false };
-        const contacts = await navigator.contacts.select(props, opts);
 
+        // Wrap in a timeout to detect if it hangs
+        const contactPromise = navigator.contacts.select(props, opts);
+        const contacts = await contactPromise;
+
+        console.log('Contacts received:', contacts);
         if (contacts && contacts.length > 0) {
           const contact = contacts[0];
-          setNewCustomer({
-            ...newCustomer,
-            name: contact.name ? contact.name[0] : '',
-            phone: contact.tel ? contact.tel[0].replace(/\s/g, '') : ''
-          });
+          const name = contact.name && contact.name.length > 0 ? contact.name[0] : '';
+          const phone = contact.tel && contact.tel.length > 0 ? contact.tel[0].replace(/\s/g, '') : '';
+
+          setNewCustomer(prev => ({
+            ...prev,
+            name: name,
+            phone: phone
+          }));
         }
       } else {
         alert('Contact picker is not supported on this device/browser.');
       }
     } catch (err) {
-      console.error('Contact picker error:', err);
+      console.error('Contact picker error details:', err);
+      alert('Could not open contact list: ' + err.message);
     }
   };
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 1024 * 1024) { // 1MB limit for Base64
-        alert('Photo is too large. Please select an image under 1MB.');
+      if (file.size > 500 * 1024) { // Reduced to 500KB for better tablet performance
+        alert('Photo is too large. Please select an image under 500KB.');
         return;
       }
       const reader = new FileReader();
+      reader.onloadstart = () => setSubmitting(true);
       reader.onloadend = () => {
         setNewCustomer({ ...newCustomer, photo: reader.result });
+        setSubmitting(false);
+      };
+      reader.onerror = () => {
+        alert('Failed to read photo file.');
+        setSubmitting(false);
       };
       reader.readAsDataURL(file);
     }
