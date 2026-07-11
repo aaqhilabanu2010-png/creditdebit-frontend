@@ -104,14 +104,18 @@ const Dashboard = () => {
     if (!newCustomer.name.trim() || submitting) return;
     
     setSubmitting(true);
-    const result = await createCustomer(newCustomer);
-    setSubmitting(false);
-    
-    if (result) {
-      setShowAddModal(false);
-      setNewCustomer({ name: '', phone: '', details: '', photo: '' });
-      fetchCustomers();
-      fetchSummary();
+    try {
+      const result = await createCustomer(newCustomer);
+      if (result) {
+        setShowAddModal(false);
+        setNewCustomer({ name: '', phone: '', details: '', photo: '' });
+        await fetchCustomers();
+        await fetchSummary();
+      }
+    } catch (err) {
+      alert("Error: " + (err.response?.data?.message || err.message));
+    } finally {
+      setSubmitting(false);
     }
   };
 
