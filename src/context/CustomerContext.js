@@ -52,14 +52,22 @@ export const CustomerProvider = ({ children }) => {
 
   const createCustomer = async (customerData) => {
     try {
+      console.log('Context: Creating customer...', { ...customerData, photo: customerData.photo ? 'BASE64_IMAGE' : 'NONE' });
       const response = await axios.post(`${API_URL}/customers`, customerData, {
         headers: getHeaders()
       });
+      console.log('Context: Customer created successfully:', response.data);
       setCustomers(prev => [response.data.customer, ...prev]);
       return response.data.customer;
     } catch (err) {
+      console.error('Context: Create customer error details:', {
+        status: err.response?.status,
+        data: err.response?.data,
+        message: err.message
+      });
       setError(err.response?.data?.message || 'Failed to create customer');
-      return null;
+      // Re-throw so the component can catch it and show an alert
+      throw err;
     }
   };
 
