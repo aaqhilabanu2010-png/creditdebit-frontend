@@ -16,11 +16,14 @@ const Dashboard = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', details: '', photo: '' });
   const [submitting, setSubmitting] = useState(false);
+  const [contactsSupported, setContactsSupported] = useState(false);
   const fileInputRef = React.useRef(null);
 
   useEffect(() => {
     fetchCustomers();
     fetchSummary();
+    // Check contact picker support
+    setContactsSupported('contacts' in navigator && 'select' in navigator.contacts);
   }, [fetchCustomers]);
 
   const handlePickContact = async () => {
@@ -480,7 +483,8 @@ const Dashboard = () => {
                     border: 'none',
                     fontSize: '20px',
                     cursor: 'pointer',
-                    padding: '5px'
+                    padding: '5px',
+                    display: contactsSupported ? 'block' : 'none'
                   }}
                   title="Pick from contacts"
                 >
